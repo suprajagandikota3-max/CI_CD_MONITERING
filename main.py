@@ -21,8 +21,9 @@ def init_session_state():
     if "user_email" not in st.session_state:
         st.session_state.user_email = ""
     if "messages" not in st.session_state:
+        # Do NOT access st.session_state.user_email here directly
         st.session_state.messages = [
-            {"role": "bot", "content": f"Hello {st.session_state.user_email}! I'm your Wikipedia assistant. Ask me anything and I'll search Wikipedia for you!"}
+            {"role": "bot", "content": "Hello! I'm your Wikipedia assistant. Ask me anything and I'll search Wikipedia for you!"}
         ]
 
 # Only initialize if Streamlit session_state is available
@@ -60,6 +61,12 @@ def main_chatbot():
             return "Sorry, I couldn't find a page matching your query. Try different keywords or check your spelling."
         except Exception:
             return "Oops, something went wrong while searching Wikipedia. Please try again."
+
+    # If messages were empty, initialize welcome message with user email
+    if not st.session_state.messages:
+        st.session_state.messages = [
+            {"role": "bot", "content": f"Hello {st.session_state.user_email}! I'm your Wikipedia assistant. Ask me anything and I'll search Wikipedia for you!"}
+        ]
 
     # Display chat history
     for message in st.session_state.messages:
