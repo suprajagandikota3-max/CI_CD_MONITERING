@@ -12,18 +12,29 @@ st.set_page_config(
 # Configure Wikipedia
 wikipedia.set_lang("en")
 
-# Initialize session state
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+# ----------------------
+# Safe session state initialization
+# ----------------------
+def init_session_state():
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    if "user_email" not in st.session_state:
+        st.session_state.user_email = ""
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "bot", "content": f"Hello {st.session_state.user_email}! I'm your Wikipedia assistant. Ask me anything and I'll search Wikipedia for you!"}
+        ]
 
-if "user_email" not in st.session_state:
-    st.session_state.user_email = ""
+# Only initialize if Streamlit session_state is available
+try:
+    init_session_state()
+except RuntimeError:
+    # Happens if running outside Streamlit (e.g., CI/CD import)
+    pass
 
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "bot", "content": f"Hello {st.session_state.user_email}! I'm your Wikipedia assistant. Ask me anything and I'll search Wikipedia for you!"}
-    ]
-
+# ----------------------
+# Chatbot main function
+# ----------------------
 def main_chatbot():
     """This is your chatbot that shows after login"""
 
@@ -80,8 +91,15 @@ def main_chatbot():
             st.session_state.messages = []
             st.rerun()
 
-# Show login page or main chatbot
-if not st.session_state.logged_in:
-    login_page()
-else:
-    main_chatbot()
+# ----------------------
+# Run chatbot if this is main
+# ----------------------
+if __name__ == "__main__":
+    try:
+        if not st.session_state.logged_in:
+            login_page()
+        else:
+            main_chatbot()
+    except RuntimeError:
+        # Happens when running outside Streamlit (e.g., CI/CD import)
+        pass
