@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script to verify imports work without running Streamlit app
+Simple import test for CI/CD
 """
 
 try:
@@ -10,15 +10,15 @@ try:
     import wikipedia
     print("✅ Wikipedia works")
     
-    # Test basic Wikipedia functionality
-    wikipedia.set_lang("en")
-    print("✅ Wikipedia configuration works")
+    import auth
+    print("✅ Auth system works")
     
-    print("✅ All imports and basic functionality successful!")
+    # Test main imports without executing
+    import main
+    print("✅ Main app imports work")
     
-except ImportError as e:
-    print(f"❌ Import error: {e}")
-    exit(1)
+    print("🎉 All imports successful!")
+    
 except Exception as e:
-    print(f"❌ Other error: {e}")
+    print(f"❌ Import error: {e}")
     exit(1)
