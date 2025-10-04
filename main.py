@@ -9,6 +9,9 @@ wikipedia.set_lang("en")
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
+if "user_email" not in st.session_state:
+    st.session_state.user_email = ""
+
 def main_chatbot():
     """This is your chatbot that shows after login"""
     
